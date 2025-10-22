@@ -1,0 +1,7 @@
+2025/10/22 16:11:54 Successfully connected to Redis
+2025/10/22 16:11:54 Starting webhook server on port 8080
+2025/10/22 16:11:54 Dashboard: http://localhost:8080/
+2025/10/22 16:11:54 Webhook endpoint: http://localhost:8080/webhook
+2025/10/22 16:11:54 Health check: http://localhost:8080/health
+2025/10/22 16:11:54 API endpoints: http://localhost:8080/api/webhooks
+2025/10/22 16:11:54 Server failed to start: listen tcp :8080: bind: address already in use
