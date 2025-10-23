@@ -39,12 +39,16 @@ type Server struct {
 
 func NewServer() *Server {
 	// Get Redis connection details from environment or use defaults
-	redisAddr := os.Getenv("REDIS_ADDR")
-	if redisAddr == "" {
-		redisAddr = "localhost:6379"
+	redistHost := os.Getenv("REDIS_HOST")
+	if redistHost == "" {
+		redistHost = "localhost"
 	}
-
-	redisPassword := os.Getenv("REDIS_PASSWORD")
+	redistPort := os.Getenv("REDIS_PORT")
+	if redistPort == "" {
+		redistPort = "6379"
+	}
+	redisAddr := fmt.Sprintf("%s:%s", redistHost, redistPort)
+	redisPassword := os.Getenv("REDIS_AUTH")
 	redisDB := 0 // Default Redis DB
 
 	rdb := redis.NewClient(&redis.Options{
