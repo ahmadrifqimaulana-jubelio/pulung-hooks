@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"embed"
 	"encoding/json"
 	"fmt"
 	"html/template"
@@ -16,6 +17,9 @@ import (
 
 	"github.com/go-redis/redis/v8"
 )
+
+//go:embed templates/*
+var templateFS embed.FS
 
 type WebhookData struct {
 	ID        string              `json:"id"`
@@ -292,10 +296,19 @@ func (s *Server) listWebhooksHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) dashboardHandler(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("templates/webhooks.html")
+	tmpl, err := template.ParseFS(templateFS, "templates/webhooks.html")
 	if err != nil {
-		log.Printf("Error parsing template: %v", err)
-		http.Error(w, "Error loading dashboard", http.StatusInternalServerError)
+		log.Printf("Error parsing embedded template: %v", err)
+		// Fallback: serve a simple HTML response
+		w.Header().Set("Content-Type", "text/html")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, `<!DOCTYPE html>
+<html><head><title>Webhook Dashboard</title></head>
+<body>
+<h1>🪝 Webhook Dashboard</h1>
+<p>Template loading error. Please check deployment.</p>
+<p><a href="/api/webhooks">View JSON API</a></p>
+</body></html>`)
 		return
 	}
 
